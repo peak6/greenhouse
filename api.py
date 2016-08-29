@@ -14,12 +14,14 @@ config.read("/etc/config/greenhouse.conf")
 
 API_KEY = config.get('default', 'API_KEY')
 API_URL = config.get('default', 'API_URL')
-API_JOB_BOARD_URL = config.get('default', 'API_JOB_BOARD_URL')
+API_PROFESSIONAL_JOB_BOARD_URL = config.get('default', 'API_PROFESSIONAL_JOB_BOARD_URL')
+API_STUDENT_JOB_BOARD_URL = config.get('default', 'API_STUDENT_JOB_BOARD_URL')
 
 app = Flask(__name__)
 CORS(app)
 
 api = Api(app)
+
 
 class CandidatesResource( Resource ):
 	def get ( self ):
@@ -33,16 +35,27 @@ class CandidatesResource( Resource ):
 
 		return json.loads(response.read())		
 
-class JobsResource( Resource ):
+class ProfessionalJobBoardResource( Resource ):
 	def get ( self ):
-		request = urllib2.Request(API_JOB_BOARD_URL)
+		request = urllib2.Request(API_PROFESSIONAL_JOB_BOARD_URL)
 
 		response = urllib2.urlopen(request)
 
 		return json.loads(response.read())
 
+class StudentJobBoardResource( Resource ):
+	def get ( self ):
+		request = urllib2.Request(API_PROFESSIONAL_JOB_BOARD_URL)
+
+		response = urllib2.urlopen(request)
+
+		return json.loads(response.read())
+
+
 api.add_resource(CandidatesResource, '/candidates')
-api.add_resource(JobsResource, '/jobs')
+api.add_resource(ProfessionalJobBoardResource, '/jobs/professional')
+api.add_resource(StudentJobBoardResource, '/jobs/student')
+
 
 #	start the app
 if __name__ == "__main__":
